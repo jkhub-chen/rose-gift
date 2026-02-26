@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>致我最爱的张梦婷 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 加载屏幕 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fef7f7 0%, #fce4ec 50%, #f8bbd9 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-heart {
+            font-size: 56px;
+            animation: heartbeat 0.8s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 105, 180, 0.6));
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .loading-text {
+            margin-top: 16px;
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.2rem;
+            color: #c2185b;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: linear-gradient(135deg, #fef7f7 0%, #fce4ec 50%, #f8bbd9 100%);
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .garden {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .flower-img {
+            position: absolute;
+            will-change: transform, opacity;
+            animation: bloom 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .flower-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            filter: blur(0.5px) saturate(1.2);
+            box-shadow: 0 0 20px rgba(255, 182, 193, 0.5), 0 0 40px rgba(255, 105, 180, 0.3);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes bloom {
+            0% { opacity: 0; transform: scale(0) rotate(-30deg); filter: blur(10px); }
+            60% { opacity: 1; transform: scale(1.05) rotate(5deg); filter: blur(0); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0.5px) saturate(1.2); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        /* 飘落花瓣 */
+        .petal {
+            position: fixed;
+            pointer-events: none;
+            z-index: 50;
+            animation: petalFall linear forwards;
+        }
+
+        @keyframes petalFall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg) translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(720deg) translateX(100px);
+                opacity: 0.3;
+            }
+        }
+
+        /* 闪烁星星 */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 60;
+            animation: sparkleAnim 1.5s ease-in-out forwards;
+        }
+
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .leaf {
+            position: absolute;
+            will-change: transform, opacity;
+            animation: leafIn 0.6s ease forwards;
+            opacity: 0.7;
+        }
+
+        @keyframes leafIn {
+            0% { opacity: 0; transform: scale(0) rotate(0deg); }
+            100% { opacity: 0.7; transform: scale(1) rotate(var(--rot)); }
+        }
+
+        .star {
+            position: absolute;
+            will-change: transform, opacity;
+            animation: starIn 0.5s ease forwards;
+        }
+
+        @keyframes starIn {
+            0% { opacity: 0; transform: scale(0); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 35px 45px;
+            box-shadow: 0 8px 32px rgba(219, 39, 119, 0.2), 0 0 60px rgba(255, 182, 193, 0.3);
+            text-align: center;
+            z-index: 100;
+            max-width: 85%;
+            width: 380px;
+            opacity: 0;
+            animation: cardIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 0.8s;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes cardIn {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .card-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.9rem;
+            color: #c2185b;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(233, 30, 99, 0.2);
+        }
+
+        .card-title .name {
+            color: #e91e63;
+            font-size: 2.3rem;
+            display: inline-block;
+            animation: nameGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes nameGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(233, 30, 99, 0.6), 0 0 30px rgba(255, 105, 180, 0.4); }
+        }
+
+        .card-text {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.2rem;
+            color: #880e4f;
+            line-height: 1.7;
+            min-height: 30px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2rem;
+            background: #e91e63;
+            vertical-align: middle;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .card-signature {
+            font-size: 0.95rem;
+            color: #ad1457;
+            text-align: right;
+            margin-top: 12px;
+        }
+
+        .card-hearts {
+            margin-top: 10px;
+            font-size: 1.3rem;
+        }
+
+        .hint {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #880e4f;
+            font-size: 0.85rem;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 2s;
+            z-index: 99;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 0.7; }
+        }
+
+        .heart-pop {
+            position: fixed;
+            pointer-events: none;
+            z-index: 200;
+            font-size: 26px;
+            animation: popUp 2s ease-out forwards;
+        }
+
+        @keyframes popUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-120px) scale(0.4); }
+        }
+
+        @media (max-width: 400px) {
+            .card { padding: 24px 30px; width: 90%; }
+            .card-title { font-size: 1.5rem; }
+            .card-title .name { font-size: 1.9rem; }
+            .card-text { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载屏幕 -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">💕</div>
+        <div class="loading-text">正在为你准备惊喜...</div>
+    </div>
+
+    <div class="garden" id="garden"></div>
+
+    <div class="card">
+        <h1 class="card-title">致我最爱的 <span class="name">张梦婷</span></h1>
+        <p class="card-text"><span id="text"></span><span class="cursor"></span></p>
+        <p class="card-signature">—— 永远爱你的 陈国栋 💝</p>
+        <div class="card-hearts">💕 💗 💕</div>
+    </div>
+
+    <p class="hint">👆 点击屏幕释放爱意</p>
+
+    <script>
+        // 唯美花朵和风景图片
+        const roseImages = [
+            // 粉色玫瑰
+            'https://images.unsplash.com/photo-1518882605630-8eb742f77392?w=300&h=300&fit=crop',
+            'https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=300&h=300&fit=crop',
+            // 红玫瑰
+            'https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=300&h=300&fit=crop',
+            // 白玫瑰
+            'https://images.unsplash.com/photo-1535378620166-273708d44e4c?w=300&h=300&fit=crop',
+            // 樱花
+            'https://images.unsplash.com/photo-1522383225653-ed111181a951?w=300&h=300&fit=crop',
+            // 花朵
+            'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=300&h=300&fit=crop',
+            // 牡丹
+            'https://images.unsplash.com/photo-1542840410-8e72139f7e79?w=300&h=300&fit=crop',
+            // 花瓣
+            'https://images.unsplash.com/photo-1518709594023-6eab9bab7b23?w=300&h=300&fit=crop',
+        ];
+
+        // 备用图片源
+        const fallbackRoseImages = [
+            'https://images.unsplash.com/photo-1462275646964-a0e3571f4f0a?w=300&h=300&fit=crop',
+            'https://images.unsplash.com/photo-1501973931609-ce48f6d77ef4?w=300&h=300&fit=crop',
+        ];
+
+        // 其他花朵和风景图片
+        const flowerImages = [
+            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=200&h=200&fit=crop',
+        ];
+
+        // 追踪失败的图片
+        let failedImages = new Set();
+
+        // 创建花朵
+        function createFlower(x, y, size, delay, isRose = true) {
+            const flower = document.createElement('div');
+            flower.className = 'flower-img';
+            flower.style.left = x + 'px';
+            flower.style.top = y + 'px';
+            flower.style.width = size + 'px';
+            flower.style.height = size + 'px';
+            flower.style.animationDelay = delay + 's';
+
+            const images = isRose ? roseImages : flowerImages;
+            const fallbacks = isRose ? fallbackRoseImages : [];
+            const imgSrc = images[Math.floor(Math.random() * images.length)];
+
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = 'flower';
+            img.loading = 'lazy';
+            img.crossOrigin = 'anonymous';
+
+            // 图片加载失败时尝试备用图片
+            img.onerror = function() {
+                if (failedImages.has(imgSrc)) {
+                    flower.remove();
+                    return;
+                }
+                failedImages.add(imgSrc);
+
+                // 尝试备用图片
+                if (fallbacks.length > 0) {
+                    const fallbackSrc = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+                    if (!failedImages.has(fallbackSrc)) {
+                        img.src = fallbackSrc;
+                        return;
+                    }
+                }
+                flower.remove();
+            };
+
+            flower.appendChild(img);
+            return flower;
+        }
+
+        // 创建叶子
+        function createLeaf(x, y, size, delay) {
+            const leaf = document.createElement('div');
+            leaf.className = 'leaf';
+            leaf.style.left = x + 'px';
+            leaf.style.top = y + 'px';
+            leaf.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+            leaf.style.animationDelay = delay + 's';
+
+            leaf.innerHTML = `
+                <svg viewBox="0 0 40 20" width="${size}" height="${size * 0.5}">
+                    <defs>
+                        <linearGradient id="lg${Math.random()}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#81c784"/>
+                            <stop offset="100%" style="stop-color:#4caf50"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M3 10 Q15 0 37 10 Q15 20 3 10" fill="#66bb6a"/>
+                    <path d="M3 10 L37 10" stroke="#388e3c" stroke-width="0.5" fill="none" opacity="0.5"/>
+                </svg>
+            `;
+
+            return leaf;
+        }
+
+        // 创建满天星
+        function createStars(x, y, size, delay) {
+            const container = document.createElement('div');
+            container.className = 'star';
+            container.style.left = x + 'px';
+            container.style.top = y + 'px';
+            container.style.width = size + 'px';
+            container.style.height = size + 'px';
+            container.style.animationDelay = delay + 's';
+
+            const dotCount = 4 + Math.floor(Math.random() * 4);
+            for (let i = 0; i < dotCount; i++) {
+                const dot = document.createElement('div');
+                const dotSize = 5 + Math.random() * 5;
+                dot.style.cssText = `
+                    position: absolute;
+                    width: ${dotSize}px;
+                    height: ${dotSize}px;
+                    border-radius: 50%;
+                    background: radial-gradient(circle, #fff 0%, #e8f5e9 100%);
+                    box-shadow: 0 0 8px rgba(255,255,255,0.9);
+                    left: ${Math.random() * size}px;
+                    top: ${Math.random() * size}px;
+                `;
+                container.appendChild(dot);
+            }
+
+            return container;
+        }
+
+        // 初始化花园
+        function initGarden() {
+            const garden = document.getElementById('garden');
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            // 卡片区域
+            const cardX1 = w * 0.15, cardX2 = w * 0.85;
+            const cardY1 = h * 0.25, cardY2 = h * 0.75;
+
+            const positions = [];
+            const minDist = 120; // 增大间距
+
+            function canPlace(x, y, isMain = false) {
+                if (x > cardX1 && x < cardX2 && y > cardY1 && y < cardY2) return false;
+                for (const p of positions) {
+                    const dist = Math.hypot(x - p.x, y - p.y);
+                    if (dist < (isMain ? minDist : minDist * 0.5)) return false;
+                }
+                return true;
+            }
+
+            // 玫瑰数量
+            const roseCount = Math.min(12, Math.floor((w * h) / 45000));
+
+            // 放置玫瑰 - 进一步放大尺寸
+            for (let i = 0; i < roseCount; i++) {
+                let x, y, tries = 0;
+                do {
+                    x = 100 + Math.random() * (w - 200);
+                    y = 100 + Math.random() * (h - 200);
+                    tries++;
+                } while (!canPlace(x, y, true) && tries < 40);
+
+                if (tries < 40) {
+                    positions.push({ x, y });
+                    const size = 130 + Math.random() * 50; // 放大到130-180px
+                    garden.appendChild(createFlower(x, y, size, i * 0.08, true));
+                }
+            }
+
+            // 放置其他花朵 - 也放大
+            for (let i = 0; i < roseCount * 0.8; i++) {
+                let x = 50 + Math.random() * (w - 100);
+                let y = 50 + Math.random() * (h - 100);
+                if (canPlace(x, y)) {
+                    positions.push({ x, y });
+                    const size = 80 + Math.random() * 40; // 放大到80-120px
+                    garden.appendChild(createFlower(x, y, size, roseCount * 0.08 + i * 0.05, false));
+                }
+            }
+
+            // 放置满天星
+            for (let i = 0; i < roseCount * 1.5; i++) {
+                let x = 20 + Math.random() * (w - 40);
+                let y = 20 + Math.random() * (h - 40);
+                const size = 35 + Math.random() * 25;
+                garden.appendChild(createStars(x, y, size, Math.random() * 0.5));
+            }
+
+            // 放置叶子
+            for (let i = 0; i < roseCount * 2; i++) {
+                let x = 10 + Math.random() * (w - 20);
+                let y = 10 + Math.random() * (h - 20);
+                const size = 30 + Math.random() * 25;
+                garden.appendChild(createLeaf(x, y, size, Math.random() * 0.4));
+            }
+        }
+
+        // 打字机
+        const messages = [
+            "张梦婷，遇见你是我这辈子最大的幸运 💕",
+            "每一秒想你，心跳都会加速 ✨",
+            "你的笑容，是我见过最美的风景 🌸",
+            "想牵着你的手，走完余生的每一天 🌹",
+            "你是我心中唯一的女神，永远的宝贝 💗",
+            "梦婷，我好想你，想见你，想抱你 💋",
+            "我的世界因你而完整，爱你到永远 💖",
+            "愿意为你做任何事，只想看你开心 😘",
+            "你是我的全部，我的全世界都是你 🌙",
+            "这一生我只爱你一个，张梦婷 ❤️",
+            "每次看到你，我的心都融化了 💕",
+            "想和你一起醒来，一起入睡，直到白头 🥰",
+            "你是我今生唯一的执着，唯一的牵挂 💝",
+            "梦婷宝贝，你是我的心肝小甜蜜 🍬",
+            "爱你入骨，此生不渝，永远只爱你 🔥"
+        ];
+
+        let mi = 0, ci = 0, del = false;
+        const textEl = document.getElementById('text');
+
+        function type() {
+            const msg = messages[mi];
+            if (!del) {
+                textEl.textContent = msg.substring(0, ++ci);
+                if (ci >= msg.length) { del = true; setTimeout(type, 2000); return; }
+            } else {
+                textEl.textContent = msg.substring(0, --ci);
+                if (ci <= 0) { del = false; mi = (mi + 1) % messages.length; }
+            }
+            setTimeout(type, del ? 30 : 70);
+        }
+
+        // 点击效果
+        function popHearts(x, y) {
+            const hearts = ['💗', '💕', '💖', '❤️', '🌹', '🌸', '✨', '💫'];
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const h = document.createElement('div');
+                    h.className = 'heart-pop';
+                    h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    h.style.left = (x + (Math.random() - 0.5) * 100) + 'px';
+                    h.style.top = y + 'px';
+                    h.style.fontSize = (20 + Math.random() * 16) + 'px';
+                    document.body.appendChild(h);
+                    setTimeout(() => h.remove(), 2000);
+                }, i * 60);
+            }
+        }
+
+        // 飘落花瓣
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            const petals = ['🌸', '🌺', '🌷', '💮', '🪷', '✿'];
+            petal.textContent = petals[Math.floor(Math.random() * petals.length)];
+            petal.style.left = Math.random() * window.innerWidth + 'px';
+            petal.style.fontSize = (15 + Math.random() * 15) + 'px';
+            petal.style.animationDuration = (6 + Math.random() * 6) + 's';
+            petal.style.opacity = 0.6 + Math.random() * 0.4;
+            document.body.appendChild(petal);
+            setTimeout(() => petal.remove(), 12000);
+        }
+
+        // 闪烁星星
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.textContent = ['✨', '⭐', '💫', '🌟'][Math.floor(Math.random() * 4)];
+            sparkle.style.left = Math.random() * window.innerWidth + 'px';
+            sparkle.style.top = Math.random() * window.innerHeight + 'px';
+            sparkle.style.fontSize = (10 + Math.random() * 12) + 'px';
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1500);
+        }
+
+        // 持续生成花瓣和星星
+        function startEffects() {
+            // 花瓣
+            setInterval(createPetal, 800);
+            // 星星
+            setInterval(createSparkle, 400);
+        }
+
+        document.addEventListener('click', e => popHearts(e.clientX, e.clientY));
+        document.addEventListener('touchstart', e => popHearts(e.touches[0].clientX, e.touches[0].clientY));
+
+        // 启动
+        window.onload = () => {
+            initGarden();
+            startEffects();
+
+            // 隐藏加载屏幕
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 800);
+
+            setTimeout(type, 1500);
+        };
+    </script>
+</body>
+</html>
